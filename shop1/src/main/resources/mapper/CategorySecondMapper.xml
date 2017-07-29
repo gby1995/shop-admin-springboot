@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.shop.springboot.mapper.CategorySecondMapper" >
+  <resultMap id="BaseResultMap" type="com.shop.springboot.vo.CategorySecond" >
+    <id column="csid" property="csid" jdbcType="INTEGER" />
+    <result column="csname" property="csname" jdbcType="VARCHAR" />
+    
+    <association property="category" javaType="com.shop.springboot.vo.Category">
+    	<id column="cid" property="cid" jdbcType="INTEGER" />
+    	<result column="cname" property="cname" jdbcType="VARCHAR" />
+    </association>
+    
+  </resultMap>
+  
+ <sql id="Base_Column_List" >
+     	csid,
+     	csname,
+     	cid
+  </sql>
+  
+  <select id="findByCsid" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select *
+    from categorysecond 
+    where  csid = #{ csid,jdbcType=INTEGER}
+  </select>
+  
+  <select id="findByCid" resultType="com.shop.springboot.vo.CategorySecond" parameterType="java.lang.Integer" >
+    select *
+    from categorysecond 
+    where  cid = #{ cid,jdbcType=INTEGER}
+    
+  </select>
+  
+  <select id="findAll" resultType="com.shop.springboot.vo.CategorySecond">
+    select *
+    from categorysecond  
+  </select>
+  
+  <delete id="delete" parameterType="java.lang.Integer" >
+    delete from categorysecond 
+    where csid =  #{ csid,jdbcType=INTEGER}
+  </delete>
+ 
+  
+  
+	<insert id="save" parameterType="com.shop.springboot.vo.CategorySecond">
+		insert into categorysecond
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="csname != null">
+				csname,
+			</if>
+			<if test="category.cid != null">
+				category.cid,
+			</if>
+		
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			
+			<if test="csname != null">
+				 #{ csname,jdbcType= VARCHAR },
+			</if>
+			<if test="category != null">
+				 #{cid,jdbcType= INTEGER },
+			</if>
+			
+		</trim>
+		<selectKey resultType="java.lang.Integer" order="AFTER"
+			keyProperty="scId">
+			
+		</selectKey>
+	</insert>
+  
+  
+   <select id="findByPage" resultType="com.shop.springboot.vo.CategorySecond"
+		parameterType="Map">
+		select
+		*
+		from categorysecond
+		ORDER BY csid desc
+		<if test="begin!=null and limit!=null">
+		 	limit #{begin},#{limit} 
+		</if>
+	</select>
+	
+	<update id="update" parameterType="com.shop.springboot.vo.CategorySecond">
+		<if test="csid !=null">
+			update categorysecond
+			<set>
+     			 
+     			 csname =  #{ csname,jdbcType= VARCHAR },
+     			 category.cid =  #{cid,jdbcType= INTEGER }
+     			 
+			</set>
+			where csid =  #{ csid,jdbcType=INTEGER}
+		</if>
+	</update>
+	
+	  <select id="findCount"  resultType="java.lang.Integer">
+		select
+		count(1)
+		from categorysecond
+		  
+	</select>
+  
+</mapper>

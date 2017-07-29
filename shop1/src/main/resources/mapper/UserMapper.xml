@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.shop.springboot.mapper.UserMapper" >
+  <resultMap id="BaseResultMap" type="com.shop.springboot.vo.User" >
+    <id column="uid" property="userId" jdbcType="INTEGER" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="password" property="userPassword" jdbcType="VARCHAR" />
+    <result column="name" property="password" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="addr" property="addr" jdbcType="VARCHAR" />
+    <result column="state" property="state" jdbcType="INTEGER" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+   </resultMap>
+  
+ <sql id="Base_Column_List" >
+     	uid,
+     	username,
+     	password,
+     	name,
+     	email,
+     	phone,
+     	addr,
+     	state,
+     	code
+  </sql>
+  
+  <select id="findCount"  resultType="java.lang.Integer">
+		select
+		count(1)
+		from user	  
+	</select>
+  
+  <select id="findByUid" resultType="com.shop.springboot.vo.User" parameterType="java.lang.Integer" >
+    select
+		<include refid="Base_Column_List" />
+    from user 
+    where  uid = #{ uid,jdbcType=INTEGER}
+  </select>
+  
+   <select id="findByCode" resultType="com.shop.springboot.vo.User" parameterType="java.lang.Integer" >
+    select
+		<include refid="Base_Column_List" />
+    from user 
+    where  code = #{ code,jdbcType=VARCHAR}
+  </select>
+  
+  <delete id="delete" parameterType="java.lang.Integer" >
+    delete from user 
+    where uid =  #{ uid,jdbcType=INTEGER}
+  </delete>
+  
+    <select id="findByUsername" resultType="com.shop.springboot.vo.User" parameterType="String" >
+        SELECT * from user where username = #{username}
+    </select>
+  
+  
+	<insert id="save" parameterType="com.shop.springboot.vo.User">
+		insert into user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="username != null">
+				username,
+			</if>
+			<if test="password != null">
+				password,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="email != null">
+				email,
+			</if>
+			<if test="phone != null">
+				phone,
+			</if>
+			<if test="addr != null">
+				addr,
+			</if>
+			<if test="state != null">
+				state,
+			</if>
+			<if test="code != null">
+				code,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="username != null">
+				 #{ username,jdbcType= VARCHAR },
+			</if>
+			<if test="password != null">
+				 #{ password,jdbcType= VARCHAR },
+			</if>
+			<if test="name != null">
+				 #{ name,jdbcType= VARCHAR },
+			</if>
+			<if test="email != null">
+				 #{ email,jdbcType= VARCHAR },
+			</if>
+			<if test="phone != null">
+				 #{ phone,jdbcType= VARCHAR },
+			</if>
+			<if test="addr != null">
+				 #{ addr,jdbcType= VARCHAR },
+			</if>
+			<if test="state != null">
+				 #{ state,jdbcType= INTEGER },
+			</if>
+			<if test="code != null">
+				 #{ code,jdbcType= VARCHAR },
+			</if>
+		</trim>
+		<selectKey resultType="java.lang.Integer" order="AFTER"
+			keyProperty="uid">
+			 select LAST_INSERT_ID()  
+		</selectKey>
+	</insert>
+   
+   <select id="findByPage" resultType="com.shop.springboot.vo.User" parameterType="Map">
+		select
+		<include refid="Base_Column_List" />
+		from user
+		ORDER BY uid desc
+		<if test="begin!=null and limit!=null">
+		 	limit #{begin},#{limit} 
+		</if>
+	</select>
+	
+	<update id="update" parameterType="com.shop.springboot.vo.User">
+		<if test="uid !=null">
+			update user
+			<set>
+     			 username =  #{ username,jdbcType= VARCHAR },
+     			 password =  #{ password,jdbcType= VARCHAR },
+     			 name =  #{ name,jdbcType= VARCHAR },
+     			 email =  #{ email,jdbcType= VARCHAR },
+     			 phone =  #{ phone,jdbcType= VARCHAR },
+     			 addr =  #{ addr,jdbcType= VARCHAR },
+     			 state =  #{ state,jdbcType= INTEGER },
+     			 code =  #{ code,jdbcType= VARCHAR }
+			</set>
+			where uid =  #{ uid,jdbcType=INTEGER}
+		</if>
+	</update>
+  
+	<select id="login" parameterType="com.shop.springboot.vo.User" resultType="com.shop.springboot.vo.User" >
+  	    select *
+		from user 
+		where username =  #{ username,jdbcType= VARCHAR }
+		 AND password =  #{ password,jdbcType= VARCHAR }
+	</select>
+</mapper>

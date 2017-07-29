@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>订单页面</title>
+<link href="/css/common.css"
+	rel="stylesheet" type="text/css" />
+<link href="/css/cart.css"
+	rel="stylesheet" type="text/css" />
+<link href="/css/product.css"
+	rel="stylesheet" type="text/css" />
+
+</head>
+<body>
+
+	<div class="container header">
+		<div class="span5">
+			<div class="logo">
+				<a href="./网上商城/index.htm"> <img
+					src="/image/r___________renleipic_01/logo.gif"
+					alt="" /> </a>
+			</div>
+		</div>
+		<div class="span9">
+			<div class="headerAd">
+				<img src="/image/header.jpg"
+					width="320" height="50" alt="正品保障" title="正品保障" />
+			</div>
+		</div>
+
+		<div th:include="menu.html"></div>
+
+	</div>
+
+	<div class="container cart">
+
+		<div class="span24">
+
+			<div class="step step1">
+				<ul>
+
+					<li class="current"></li>
+					<li>我的订单</li>
+				</ul>
+			</div>
+
+			<table>
+				<tbody>
+				
+				  
+					
+						<tr th:each="order : ${pageBean.list}">
+							<th colspan="5">订单编号:${order.oid}&nbsp;&nbsp;&nbsp;&nbsp;订单金额:<font
+								color="red">${order.total}
+							</font>
+							&nbsp;&nbsp;&nbsp;&nbsp;<font color="red">
+							
+								<a th:if="order.state == 1" th:href="${ pageContext.request.contextPath }/order/findByOid.htm?oid=${order.oid}">付款</a>
+								<a th:if="order.state == 2">已付款</a>
+								<a th:if="order.state == 3" th:href="/order/updateState.htm?oid=${order.oid}">确认收货</a>
+								<a th:if="order.state == 4">交易成功</a>	
+								
+								
+							</font>
+							</th>
+						</tr>
+						<tr>
+							<th>图片</th>
+							<th>商品</th>
+							<th>价格</th>
+							<th>数量</th>
+							<th>小计</th>
+						</tr>
+						
+						
+							<tr th:each="orderItem : ${order.orderItems}">
+								<td width="60"><img
+									th:src="/${orderItem.product.image}" />
+								</td>
+								<td>${orderItem.product.pname}</td>
+								<td>${orderItem.product.shop_price}</td>
+								<td class="quantity" width="60">${orderItem.count}</td>
+								<td width="140"><span class="subtotal">￥${orderItem.subtotal}
+								</span></td>
+							</tr>
+						
+	
+					<tr>
+						<th colspan="5">
+						<div class="pagination">
+							<span>第${pageBean.page}/${pageBean.totalPage}页 </span>
+								
+								<a
+								    th:if="pageBean.page != 1"
+									th:href="${ pageContext.request.contextPath }/order/findByUid.htm?page=1"
+									class="firstPage">&nbsp;</a>
+								<a
+								    th:if="pageBean.page != 1"
+									th:href="${ pageContext.request.contextPath }/order/findByUid.htm?page=${pageBean.page-1}"
+									class="previousPage">&nbsp;</a>
+							
+							<c:forEach  var="i" begin="1" end="${pageBean.totalPage}">
+							  		<a
+										th:if="pageBean.page != i"
+										th:href="/order_findByUid.action?page=${i}">${i}
+									</a>
+								 <span th:unless="pageBean.page != i" class="currentPage">${i }</span>
+							</c:forEach> 
+								
+								
+								<a 
+									th:if="pageBean.page != pageBean.totalPage"
+									class="nextPage"
+									th:href="/order/findByUid.htm?page=${pageBean.page+1}">&nbsp;</a>
+								<a 
+									th:if="pageBean.page != pageBean.totalPage"
+									class="lastPage"
+									th:href="/order/findByUid.html?page=${pageBean.totalPage}">&nbsp;</a>
+							
+							</div>
+							</th>
+					</tr>
+				</tbody>
+			</table>
+
+
+		</div>
+
+	</div>
+	<div class="container footer">
+		<div class="span24">
+			<div class="footerAd">
+				<img src="/image/r___________renleipic_01/footer.jpg" alt="我们的优势"
+					title="我们的优势" height="52" width="950"/>
+			</div>
+		</div>
+		<div class="span24">
+			<ul class="bottomNav">
+				<li><a href="#">关于我们</a> |</li>
+				<li><a href="#">联系我们</a> |</li>
+				<li><a href="#">诚聘英才</a> |</li>
+				<li><a href="#">法律声明</a> |</li>
+				<li><a>友情链接</a> |</li>
+				<li><a target="_blank">支付方式</a> |</li>
+				<li><a target="_blank">配送方式</a> |</li>
+				<li><a>SHOP++官网</a> |</li>
+				<li><a>SHOP++论坛</a></li>
+			</ul>
+		</div>
+		<div class="span24">
+			<div class="copyright">Copyright 版权所有</div>
+		</div>
+	</div>
+</body>
+</html>

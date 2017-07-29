@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.shop.springboot.mapper.CategoryMapper" >
+  <resultMap id="BaseResultMap" type="com.shop.springboot.vo.Category" >
+    <id column="cid" property="cid" jdbcType="INTEGER" />
+    <result column="cname" property="cname" jdbcType="VARCHAR" />
+    
+    <collection property="categorySeconds" javaType="com.shop.springboot.vo.CategorySecond">
+   		<id column="csid" property="csid" jdbcType="INTEGER" />
+    	<result column="csname" property="csname" jdbcType="VARCHAR" />
+    	
+    	<association property="category" javaType="com.shop.springboot.vo.Category">
+    		<id column="cid" property="cid" jdbcType="INTEGER" />
+    		<result column="cname" property="cname" jdbcType="VARCHAR" />
+    	</association>
+    	
+    	<collection property="products" javaType="com.shop.springboot.vo.Product">
+    	<id column="pid" property="pid" jdbcType="INTEGER" />
+    	<result column="pname" property="pname" jdbcType="VARCHAR" />
+   	 	<result column="market_price" property="market_price" jdbcType="DOUBLE" />
+    	<result column="shop_price" property="shop_price" jdbcType="DOUBLE" />
+    	<result column="image" property="image" jdbcType="VARCHAR" />
+    	<result column="pdesc" property="pdesc" jdbcType="VARCHAR" />
+    	<result column="is_hot" property="is_hot" jdbcType="INTEGER" />
+    	<result column="pdate" property="pdate" jdbcType="DATE" />
+    	<result column="csid" property="csid" jdbcType="INTEGER" />
+    </collection>
+    
+    </collection>
+    
+    </resultMap>
+    
+  
+ <sql id="Base_Column_List" >
+     	cid,
+     	cname
+  </sql>
+  
+  <select id="findByCid" resultType="com.shop.springboot.vo.Category" parameterType="java.lang.Integer" >
+    select *
+    from category 
+    where  cid = #{ cid,jdbcType=INTEGER}
+  </select>
+  
+    <select id="findAll"  resultMap="BaseResultMap">
+        select * from category 
+    </select>
+  
+  <delete id="delete" parameterType="java.lang.Integer" >
+    delete from category 
+    where cid =  #{ cid,jdbcType=INTEGER}
+  </delete>
+  
+	<insert id="save" parameterType="com.shop.springboot.vo.Category">
+		insert into category
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			
+			<if test="cname != null">
+				cname,
+			</if>
+			
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+	
+			<if test="cname != null">
+				 #{ cname,jdbcType= VARCHAR },
+			</if>
+			
+		</trim>
+		<selectKey resultType="java.lang.Integer" order="AFTER"
+			keyProperty="scId">
+		</selectKey>
+	</insert>
+
+	
+	<update id="update" parameterType="com.shop.springboot.vo.Category">
+		<if test="scId !=null">
+			update category
+			<set>
+     			 cname =  #{ cname,jdbcType= VARCHAR }
+     			 
+			</set>
+			where cid =  #{ cid,jdbcType=INTEGER}
+		</if>
+	</update>
+  
+</mapper>

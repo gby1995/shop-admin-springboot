@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<table width="100%">
+	<tr th:each="orderItem : ${session.list} ">
+		<td><img width="40" height="45" th:src="'/'+${orderItem.product.image}"/></td>
+		<td th:text="${orderItem.product.pname}">${orderItem.product.pname}</td>
+		<td th:text="${orderItem.count}">${orderItem.count}</td>
+		<td th:text="${orderItem.subtotal}">${orderItem.subtotal}</td>
+	</tr>
+
+</table>

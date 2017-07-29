@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.shop.springboot.mapper.OrderMapper" >
+  <resultMap id="BaseResultMap" type="com.shop.springboot.vo.Order" >
+    <id column="oid" property="oid" jdbcType="INTEGER" />
+    <result column="total" property="total" jdbcType="VARCHAR" />
+    <result column="ordertime" property="ordertime" jdbcType="DATE" />
+    <result column="state" property="state" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="addr" property="addr" jdbcType="VARCHAR" />
+    
+    
+    <association property="user" javaType="com.shop.springboot.vo.User">
+     <id column="uid" property="userId" jdbcType="INTEGER" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="password" property="userPassword" jdbcType="VARCHAR" />
+    <result column="name" property="password" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="addr" property="addr" jdbcType="VARCHAR" />
+    <result column="state" property="state" jdbcType="INTEGER" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    </association>
+  </resultMap>
+  
+ <sql id="Base_Column_List" >
+     	oid,
+     	total,
+     	ordertime,
+     	state,
+     	name,
+     	phone,
+     	addr
+     	
+  </sql>
+  
+  <select id="findPageByUid" resultType="com.shop.springboot.vo.Order" parameterType="java.lang.Integer" >
+    select
+	<include refid="Base_Column_List" />
+    from orders 
+    where  uid = #{ uid,jdbcType=INTEGER}
+  </select>
+  
+  <select id="findByPage" resultType="com.shop.springboot.vo.Order" parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from orders
+		where 1=1
+		ORDER BY uid desc
+		<if test="begin!=null and limit!=null">
+		 	limit #{begin},#{limit} 
+		</if>
+	</select>
+	
+	 <select id="findCount"  resultType="java.lang.Integer">
+		select
+		count(1)
+		from orders
+		where 1=1
+		  
+	</select>
+	
+	<select id="findCountByUid"  resultType="java.lang.Integer">
+		select
+		count(1)
+		from orders
+		where uid = #{ uid,jdbcType=INTEGER}
+		  
+	</select>
+  
+  <select id="findAll" resultType="com.shop.springboot.vo.Order" parameterType="java.lang.Integer" >
+    select
+	<include refid="Base_Column_List" />
+    from orders 
+    where  1 = 1
+  </select>
+  
+   <select id="findOrderItem" resultType="com.shop.springboot.vo.OrderItem" parameterType="java.lang.Integer" >
+    select
+	*
+    from orderitem 
+    where  oid = #{ oid,jdbcType=INTEGER}
+  </select>
+  
+   <select id="findByOid" resultType="com.shop.springboot.vo.Order" parameterType="java.lang.Integer" >
+    select
+	<include refid="Base_Column_List" />
+    from orders 
+    where  oid = #{ oid,jdbcType=INTEGER}
+  </select>
+
+	<insert id="save" parameterType="com.shop.springboot.vo.Order">
+		insert into orders
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="total != null">
+				total,
+			</if>
+			<if test="ordertime != null">
+				ordertime,
+			</if>
+			<if test="state != null">
+				state,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="phone != null">
+				phone,
+			</if>
+			<if test="addr != null">
+				addr,
+			</if>
+			<if test="user != null">
+				uid,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="total != null">
+				 #{ total,jdbcType= VARCHAR },
+			</if>
+			<if test="ordertime != null">
+				 #{ ordertime,jdbcType= DATE },
+			</if>
+			<if test="state != null">
+				 #{ state,jdbcType= INTEGER },
+			</if>
+			<if test="name != null">
+				 #{ name,jdbcType= VARCHAR },
+			</if>
+			<if test="phone != null">
+				 #{ phone,jdbcType= VARCHAR },
+			</if>
+			<if test="addr != null">
+				 #{ addr,jdbcType= VARCHAR },
+			</if>
+			<if test="user != null">
+				 ${ user.uid},
+			</if>
+		</trim>
+		<selectKey resultType="java.lang.Integer" order="AFTER"
+			keyProperty="oid">
+		   select LAST_INSERT_ID()  
+		</selectKey>
+	</insert>
+	
+	<update id="update" parameterType="com.shop.springboot.vo.Order">
+			update order
+			<set>
+     			 total =  #{ total,jdbcType= VARCHAR },
+     			 ordertime =  #{ ordertime,jdbcType= DATE },
+     			 state =  #{ state,jdbcType= INTEGER },
+     			 name =  #{ name,jdbcType= VARCHAR },
+     			 phone =  #{ scTopCorpId,jdbcType= VARCHAR },
+     			 addr =  #{ scTopCorpName,jdbcType= VARCHAR },
+     			 uid =  #{ scSipNum,jdbcType= INTEGER }
+			</set>
+			where oid =  #{ oid,jdbcType=INTEGER}
+	</update>
+  
+</mapper>

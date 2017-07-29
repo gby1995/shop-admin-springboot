@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.shop.springboot.mapper.AdminUserMapper" >
+  <resultMap id="BaseResultMap" type="com.shop.springboot.vo.AdminUser" >
+    <id column="uid" property="uid" jdbcType="INTEGER" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+  </resultMap>
+  
+ <sql id="Base_Column_List" >
+     	uid,
+     	username,
+     	password
+  </sql>
+  
+  <select id="selectUserByPwd" resultMap="BaseResultMap" parameterType="com.shop.springboot.vo.AdminUser" >
+    select
+	<include refid="Base_Column_List" />
+    from adminuser 
+    where  username = #{ username,jdbcType=VARCHAR}
+    AND password = #{ password,jdbcType=VARCHAR}
+  </select>
+  
+</mapper>

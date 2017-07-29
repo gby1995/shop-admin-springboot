@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh">
+<head>
+<meta charset="UTF-8"/>
+<title>购物车</title>
+
+<link href="/css/common.css" rel="stylesheet" type="text/css"/>
+<link href="/css/cart.css" rel="stylesheet" type="text/css"/>
+
+
+</head>
+<body>
+<div class="container header">
+	<div class="span5">
+		<div class="logo">
+			<a href="./网上商城/index.htm">
+				<img src="/image/r___________renleipic_01/logo.gif" alt=""/>
+			</a>
+		</div>
+	</div>
+	<div class="span9">
+<div class="headerAd">
+	<img src="/image/header.jpg" width="320" height="50" alt="正品保障" title="正品保障"/>
+</div>	
+</div>
+	
+<div class="span10 last">
+	<div class="topNav clearfix">
+		<ul>
+		
+			  
+			
+			<li th:if="${session.existUser == null}" id="headerLogin" class="headerLogin" style="display: list-item;">
+				<a  th:href="'/user/loginPage'">登录</a>|</li>
+			<li th:if="${session.existUser == null}" id="headerRegister" class="headerRegister"
+				style="display: list-item;"><a  th:href="'/user/registPage'">注册</a>|
+			</li>
+			
+			
+			<li th:unless="${session.existUser == null}" id="headerLogin" class="headerLogin" style="display: list-item;">
+				${session.existUser.name}
+				|</li>
+			<li th:unless="${session.existUser == null}" id="headerLogin" class="headerLogin" style="display: list-item;">
+				<a th:href="'/order/findByUid?page=1'">我的订单</a>
+			|</li>
+			<li id="headerRegister" class="headerRegister"
+				style="display: list-item;"><a th:href="'/user/quit'">退出</a>|
+			</li>
+			
+		
+			<li><a>会员中心</a> |</li>
+			<li><a>购物指南</a> |</li>
+			<li><a>关于我们</a></li>
+		</ul>
+	</div>
+	<div class="cart">
+		<a th:href="'/cart/myCart'">购物车</a>
+	</div>
+	<div class="phone">
+		客服热线: <strong>343253/8678</strong>
+	</div>
+</div>
+<div class="span24">
+	<ul class="mainNav">
+		<li><a th:href="'/index'">首页</a> |</li>
+		
+		
+		
+			<li th:each="c : ${session.cList}"><a th:href="'/product/findByCid?cid='+${c.cid}+'&amp;page=1'" th:text="${c.cname}">${c.cname}</a>|</li>
+		
+
+	</ul>
+</div>
+	
+
+</div>		<div th:if="${session.cart.cartItems.size() != 0}" class="container cart">
+     
+		
+		<div class="span24">
+			<div class="step step1">
+				购物车信息
+			</div>
+				<table>
+					<tbody>
+					<tr>
+						<th>图片</th>
+						<th>商品</th>
+						<th>价格</th>
+						<th>数量</th>
+						<th>小计</th>
+						<th>操作</th>
+					</tr>
+					
+						
+						<tr th:each="cartItem : ${session.cart.cartItems }">
+							<td width="60">
+								<img th:src="'/'+${cartItem.product.image}"/>
+							</td>
+							<td>
+								<a target="_blank" th:text="${cartItem.product.pname}">${cartItem.product.pname}</a>
+							</td>
+							<td th:text="'￥'+${cartItem.product.shop_price}">
+								￥${cartItem.product.shop_price}
+							</td>
+							<td class="quantity" width="60" th:text="${cartItem.count}">
+								${cartItem.count}
+							</td>
+							<td width="140">
+								<span class="subtotal" th:text="'￥'+${cartItem.subtotal}">￥${cartItem.subtotal}</span>
+							</td>
+							<td>
+								<a th:href="'/cart/removeCart?pid='+${cartItem.product.pid}" class="delete">删除</a>
+							</td>
+						</tr>
+			
+					</tbody>
+				</table>
+				<dl id="giftItems" class="hidden" style="display: none;">
+				</dl>
+				<div class="total">
+					<em id="promotion"></em>
+							<em>
+								登录后确认是否享有优惠
+							</em>
+					赠送积分: <em id="effectivePoint" th:text="${session.cart.total}">${sessionScope.cart.total}</em>
+					商品金额: <strong id="effectivePrice" th:text="'￥'+${session.cart.total}+'元'">￥${sessionScope.cart.total}元</strong>
+				</div>
+				<div class="bottom">
+					<a th:href="'/cart/clearCart'" id="clear" class="clear">清空购物车</a>
+					<a th:href="'/order/saveOrder'" id="submit" class="submit">提交订单</a>
+				</div>
+				
+		</div>
+		
+			<div th:unless="${session.cart.cartItems.size() != 0}" class="span24">
+				<div class="step step1">
+					<span><h2>亲!您还没有购物!请先去购物!</h2></span>
+				</div>
+			</div>
+
+	</div>
+<div class="container footer">
+	<div class="span24">
+		<div class="footerAd">
+					<img src="/image/footer.jpg" width="950" height="52" alt="我们的优势" title="我们的优势"/>
+</div>	</div>
+	<div class="span24">
+		<ul class="bottomNav">
+				<li>
+						<a >关于我们</a>
+						|
+					</li>
+					<li>
+						<a>联系我们</a>
+						|
+					</li>
+					<li>
+						<a>招贤纳士</a>
+						|
+					</li>
+					<li>
+						<a>法律声明</a>
+						|
+					</li>
+					<li>
+						<a>友情链接</a>
+						|
+					</li>
+					<li>
+						<a target="_blank">支付方式</a>
+						|
+					</li>
+					<li>
+						<a  target="_blank">配送方式</a>
+						|
+					</li>
+					<li>
+						<a>服务声明</a>
+						|
+					</li>
+					<li>
+						<a>广告声明</a>
+						
+					</li>
+		</ul>
+	</div>
+	<div class="span24">
+		<div class="copyright">Copyright 版权所有</div>
+	</div>
+</div>
+</body></html>

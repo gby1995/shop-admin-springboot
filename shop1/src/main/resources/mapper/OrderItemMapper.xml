@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.shop.springboot.mapper.OrderItemMapper" >
+  <resultMap id="BaseResultMap" type="com.shop.springboot.vo.OrderItem" >
+    <id column="itemid" property="itemid" jdbcType="INTEGER" />
+    <result column="count" property="count" jdbcType="INTEGER" />
+    <result column="subtotal" property="subtotal" jdbcType="DOUBLE" />
+    <result column="pid" property="pid" jdbcType="INTEGER" />
+    <result column="oid" property="oid" jdbcType="INTEGER" />
+    
+  </resultMap>
+  
+ <sql id="Base_Column_List" >
+     	itemid,
+     	count,
+     	subtotal,
+     	pid,
+     	oid
+  </sql>
+  
+</mapper>

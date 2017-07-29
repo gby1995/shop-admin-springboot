@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.shop.springboot.mapper.ProductMapper" >
+  <resultMap id="BaseResultMap" type="com.shop.springboot.vo.Product" >
+    <id column="pid" property="pid" jdbcType="INTEGER" />
+    <result column="pname" property="pname" jdbcType="VARCHAR" />
+    <result column="market_price" property="market_price" jdbcType="DOUBLE" />
+    <result column="shop_price" property="shop_price" jdbcType="DOUBLE" />
+    <result column="image" property="image" jdbcType="VARCHAR" />
+    <result column="pdesc" property="pdesc" jdbcType="VARCHAR" />
+    <result column="is_hot" property="is_hot" jdbcType="INTEGER" />
+    <result column="pdate" property="pdate" jdbcType="DATE" />
+ 
+    <association property="categorySecond" javaType="com.shop.springboot.vo.CategorySecond">
+   		<id column="csid" property="csid" jdbcType="INTEGER" />
+    	<result column="csname" property="csname" jdbcType="VARCHAR" />
+    	
+    	<association property="category" javaType="com.shop.springboot.vo.Category">
+    	<id column="cid" property="cid" jdbcType="INTEGER" />
+    	<result column="cname" property="cname" jdbcType="VARCHAR" />
+    	
+    </association>
+    </association>
+  </resultMap>
+  
+ <sql id="Base_Column_List" >
+     	pid,
+     	pname,
+     	market_price,
+     	shop_price,
+     	image,
+     	pdesc,
+     	is_hot,
+     	pdate
+  </sql>
+  
+  <select id="findHot" resultType="com.shop.springboot.vo.Product" parameterType="java.lang.Integer" >
+    select
+	<include refid="Base_Column_List" />
+    from product
+    where  is_hot = 1 order by #{pid,jdbcType=INTEGER} desc limit 10
+  </select>
+  
+   <select id="findCountCid" resultType="java.lang.Integer" parameterType="java.lang.Integer" >
+    select count(1) from product p left join categorysecond cs on p.csid = cs.csid where cs.cid = #{cid,jdbcType=INTEGER}
+  </select>
+  
+   <select id="findCount" resultType="java.lang.Integer" parameterType="java.lang.Integer" >
+    select count(1) from product
+  </select>
+ 
+  
+  <select id="findCountCsid" resultType="java.lang.Integer" parameterType="java.lang.Integer" >
+    select count(1)
+    from product
+    where  categorySecond.csid = #{csid,jdbcType=INTEGER}
+  </select>
+  
+  <select id="findNew" resultType="com.shop.springboot.vo.Product" parameterType="java.lang.Integer" >
+    select
+	<include refid="Base_Column_List" />
+    from product
+    order by #{pdate,jdbcType=DATE} desc limit 10
+  </select>
+  
+   <select id="findByPid" resultType="com.shop.springboot.vo.Product" parameterType="java.lang.Integer" >
+    select
+	<include refid="Base_Column_List" />
+    from product
+    where  pid = #{ pid,jdbcType=INTEGER}
+  </select>
+  
+  <delete id="delete" parameterType="java.lang.Integer" >
+    delete from product 
+    where pid =  #{ pid,jdbcType=INTEGER}
+  </delete>
+
+	<insert id="save" parameterType="com.shop.springboot.vo.Product">
+		insert into product
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="pname != null">
+				pname,
+			</if>
+			<if test="market_price != null">
+				market_price,
+			</if>
+			<if test="shop_price != null">
+				shop_price,
+			</if>
+			<if test="image != null">
+				image,
+			</if>
+			<if test="pdesc != null">
+				pdesc,
+			</if>
+			<if test="is_hot != null">
+				is_hot,
+			</if>
+			<if test="pdate != null">
+				pdate,
+			</if>
+			<if test="csid != null">
+				csid,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="pname != null">
+				 #{ pname,jdbcType= VARCHAR },
+			</if>
+			<if test="market_price != null">
+				 #{ market_price,jdbcType= DOUBLE },
+			</if>
+			<if test="shop_price != null">
+				 #{ shop_price,jdbcType= DOUBLE },
+			</if>
+			<if test="image != null">
+				 #{ image,jdbcType= VARCHAR },
+			</if>
+			<if test="pdesc != null">
+				 #{ pdesc,jdbcType= VARCHAR },
+			</if>
+			<if test="is_hot != null">
+				 #{ is_hot,jdbcType= INTEGER },
+			</if>
+			<if test="pdate != null">
+				 #{ pdate,jdbcType= DATATIME },
+			</if>
+			<if test="csid != null">
+				 #{ csid,jdbcType= INTEGER },
+			</if>
+			
+		</trim>
+		<selectKey resultType="java.lang.Integer" order="AFTER"
+			keyProperty="pid">
+			
+		</selectKey>
+	</insert>
+  
+   <select id="findByPageCid" resultType="com.shop.springboot.vo.Product"
+		parameterType="Map">
+		select
+		pid,
+     	pname,
+     	market_price,
+     	shop_price,
+     	image,
+     	pdesc,
+     	is_hot,
+     	pdate,
+     	p.csid
+		from product p left join categorysecond cs on p.csid = cs.csid where cs.cid = #{cid,jdbcType=INTEGER}
+		ORDER BY pid desc
+		<if test="begin!=null and limit!=null">
+		 	limit #{begin},#{limit} 
+		</if>
+	</select>
+	
+	  <select id="findByPageCsid" resultType="com.shop.springboot.vo.Product"
+		parameterType="com.shop.springboot.vo.Product">
+		select
+		<include refid="Base_Column_List" />
+		from product
+		ORDER BY pid desc
+		<if test="begin!=null and limit!=null">
+		 	limit #{begin},#{limit} 
+		</if>
+	</select>
+	
+	  <select id="findByPage" resultType="com.shop.springboot.vo.Product"
+		parameterType="Map">
+		select
+		<include refid="Base_Column_List" />
+		from product
+		ORDER BY pid desc
+		<if test="begin!=null and limit!=null">
+		 	limit #{begin},#{limit} 
+		</if>
+	</select>
+	
+	<update id="update" parameterType="com.shop.springboot.vo.Product">
+		<if test="pid !=null">
+			update product
+			<set>
+     			 pname =  #{ pname,jdbcType= VARCHAR },
+     			 market_price =  #{ market_price,jdbcType= DOUBLE },
+     			 shop_price =  #{ shop_price,jdbcType= DOUBLE },
+     			 image =  #{ image,jdbcType= VARCHAR },
+     			 pdesc =  #{ pdesc,jdbcType= VARCHAR },
+     			 is_hot =  #{ is_hot,jdbcType= INTEGER },
+     			 pdate =  #{ pdate,jdbcType= DATE },
+     			 categorySecond.csid =  #{ csid,jdbcType= INTEGER }
+     			 
+			</set>
+			where pid =  #{ pid,jdbcType=INTEGER}
+		</if>
+	</update>
+  
+</mapper>
